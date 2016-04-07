@@ -19,6 +19,11 @@
 
 static NSString * const reuseIdentifier = @"DetailImageCell";
 
+- (instancetype) init
+{
+    return [self initWithCollectionViewLayout:nil];
+}
+
 - (instancetype) initWithCollectionViewLayout:(UICollectionViewLayout *)layout
 {
     if ([layout isKindOfClass:[UICollectionViewFlowLayout class]]) {
@@ -30,6 +35,7 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.flowLayout.minimumLineSpacing = 0.0f;
     self.flowLayout.minimumInteritemSpacing = 0.0f;
+    NSLog(@"initWIth");
     return [super initWithCollectionViewLayout:self.flowLayout];
 }
 
@@ -43,9 +49,18 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
     UINib *cellNib = [UINib nibWithNibName:@"DetailImageCell" bundle:nil];
     [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:reuseIdentifier];
     self.collectionView.pagingEnabled = YES;
+    self.flowLayout.itemSize = self.collectionView.bounds.size;
     
-    self.flowLayout.itemSize = self.view.bounds.size;
+    [self.flowLayout invalidateLayout];
     // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.assetIndex inSection:0];
+    
+    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+//    [self.collectionView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,15 +79,17 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
 */
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [[ImageManager sharedManager].assets count];
+    return [[ImageManager sharedManager].selectedAssets count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     DetailImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
     // Configure the cell
-    PhotoItem *item = [ImageManager sharedManager].assets[indexPath.row];
-    cell.imageView.image = item.realImage;
+    PhotoItem *item = [ImageManager sharedManager].selectedAssets[indexPath.row];
+    UIImage *image = item.realImage;
+    cell.imageView.image = image;
+    cell.scrollView.zoomScale = 1.0f;
     return cell;
 }
 

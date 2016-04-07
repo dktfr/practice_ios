@@ -29,22 +29,18 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+    NSNotificationCenter *notiCenter = [NSNotificationCenter defaultCenter];
+    [notiCenter addObserver:self
+                   selector:@selector(assetsLibraryDidChanged:)
+                       name:ALAssetsLibraryChangedNotification
+                     object:nil];
+    
     UINib *cellNib = [UINib nibWithNibName:@"GroupItemCell" bundle:nil];
     [self.tableView registerNib:cellNib forCellReuseIdentifier:reuseIdentifier];
     
-    self.navigationItem.title = @"Album";
+    self.title = @"Album";
     
-    [[ImageManager sharedManager] loadGroupUsingCompletedBlock:^{
-        NSLog(@"Callback");
-        [self.tableView reloadData];
-    } andFailedBlock:^(NSError *error){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR!"
-                                                        message:@"User denied access"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }];
+    [self loadGroups];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,7 +60,7 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
     
     // Configure the cell...
     GroupItem *groupItem = [[ImageManager sharedManager].groups objectAtIndex:indexPath.row];
-    NSLog(@"item title : %@, number : %li : ", groupItem.title, groupItem.numberOfPhoto);
+    
     cell.titleLabel.text = groupItem.title;
     cell.numberLabel.text = [NSString stringWithFormat:@"%li", groupItem.numberOfPhoto];
     cell.posterThumbnail.image = groupItem.posterThumbnail;
@@ -73,10 +69,30 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    PhotoGridController *photoGridController = [[PhotoGridController alloc] initWithCollectionViewLayout:layout];
+//    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    PhotoGridController *photoGridController = [[PhotoGridController alloc] init];
     photoGridController.group = [[ImageManager sharedManager].groups objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:photoGridController animated:YES];
+}
+
+- (void) loadGroups
+{
+    [[ImageManager sharedManager] loadGroupUsingCallbackBlock:^{
+        [self.tableView reloadData];
+    } andFailedBlock:^(NSError *error){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR!"
+                                                        message:@"User denied access"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }];
+}
+
+- (void) assetsLibraryDidChanged:(NSNotification *)changeNotification
+{
+    NSLog(@"Noti change");
+    [self loadGroups];
 }
 
 /*

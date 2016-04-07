@@ -16,11 +16,11 @@
 @property (nonatomic, readonly) NSInteger numberOfGroups;
 @property (nonatomic, readonly) NSArray *groups;
 @property (nonatomic, readonly) NSInteger numberOfAssets;
-@property (nonatomic, readonly) NSArray *assets;
+@property (nonatomic, readonly) NSArray *selectedAssets;
 
 + (instancetype) sharedManager;
 
-- (void) loadGroupUsingCompletedBlock:(void (^)(void))complete andFailedBlock:(void (^)(NSError *))fail;
-- (void) loadAssetsFromGroup:(ALAssetsGroup *)group andCompleteBlock:(void (^)(void))complete;
+- (void) loadGroupUsingCallbackBlock:(void (^)(void))callback andFailedBlock:(void (^)(NSError *))fail;
+- (void) loadAssetsFromGroup:(ALAssetsGroup *)group andCallbackBlock:(void (^)(void))callback;
 
 @end

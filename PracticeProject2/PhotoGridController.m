@@ -23,6 +23,11 @@
 
 static NSString * const reuseIdentifier = @"PhotoItemCell";
 
+- (instancetype) init
+{
+    return [self initWithCollectionViewLayout:nil];
+}
+
 - (instancetype) initWithCollectionViewLayout:(UICollectionViewLayout *)layout
 {
     if ([layout isKindOfClass:[UICollectionViewFlowLayout class]]) {
@@ -30,7 +35,6 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
     } else {
         self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
     }
-    
     self.columnCount = 3;
     self.flowLayout.minimumLineSpacing = 3.0f;
     self.flowLayout.minimumInteritemSpacing = 3.0f;
@@ -44,12 +48,16 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
     [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:reuseIdentifier];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     
-    self.navigationItem.title = self.group.title;
+    NSNotificationCenter *notiCenter = [NSNotificationCenter defaultCenter];
+    [notiCenter addObserver:self
+                   selector:@selector(assetsLibraryDidChanged:)
+                       name:ALAssetsLibraryChangedNotification
+                     object:nil];
+    
+    self.title = self.group.title;
     
     self.flowLayout.itemSize = [self computeSizeForColumn];
-    [[ImageManager sharedManager] loadAssetsFromGroup:self.group.originalData andCompleteBlock:^{
-        [self.collectionView reloadData];
-    }];
+    [self loadAssets];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -72,17 +80,29 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     PhotoItemCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-    PhotoItem *item = [[ImageManager sharedManager].assets objectAtIndex:indexPath.row];
+    PhotoItem *item = [[ImageManager sharedManager].selectedAssets objectAtIndex:indexPath.row];
     cell.thumbnail.image = item.thumbnail;
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    DetailController *detailController = [[DetailController alloc] initWithCollectionViewLayout:layout];
+//    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    DetailController *detailController = [[DetailController alloc] init];
     detailController.assetIndex = indexPath.row;
     [self.navigationController pushViewController:detailController animated:YES];
+}
+
+- (void) loadAssets
+{
+    [[ImageManager sharedManager] loadAssetsFromGroup:self.group.originalData andCallbackBlock:^{
+        [self.collectionView reloadData];
+    }];
+}
+
+- (void) assetsLibraryDidChanged:(NSNotification *)changeNotification
+{
+    [self loadAssets];
 }
 
 @end

@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DetailImageCell : UICollectionViewCell
+@interface DetailImageCell : UICollectionViewCell <UIScrollViewDelegate>
+
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+
+- (void)setContentSize:(CGSize)contentSize;
 
 @end

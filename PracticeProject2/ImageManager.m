@@ -16,7 +16,7 @@
 
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
 @property (nonatomic, strong) NSMutableArray *privateGroups;
-@property (nonatomic, strong) NSMutableArray *privateAssets;
+@property (nonatomic, strong) NSMutableArray *privateSelectedAssets;
 
 - (instancetype) initPrivate;
 
@@ -48,13 +48,12 @@
 {
     self = [super init];
     _privateGroups = [[NSMutableArray alloc] init];
-    _privateAssets = [[NSMutableArray alloc] init];
+    _privateSelectedAssets = [[NSMutableArray alloc] init];
 //    if (NSClassFromString(@"PHAssetCollection")) {
 //        _shouldUseNewLib = YES;
 //    } else {
         _shouldUseNewLib = NO;
         self.assetsLibrary = [[ALAssetsLibrary alloc] init];
-    
 //    }
     return self;
 }
@@ -72,19 +71,19 @@
     for (ALAssetsGroup *group in self.privateGroups) {
         [convertedGroups addObject:[[GroupItem alloc] initFromALAssetsGroup:group]];
     }
-    NSLog(@"groups...");
+    
     return [convertedGroups copy];
 }
 
 - (NSInteger) numberOfAssets
 {
-    return [self.privateAssets count];
+    return [self.privateSelectedAssets count];
 }
 
-- (NSArray *) assets
+- (NSArray *) selectedAssets
 {
     NSMutableArray *convertedAssets = [[NSMutableArray alloc] init];
-    for (ALAsset *asset in self.privateAssets) {
+    for (ALAsset *asset in self.privateSelectedAssets) {
         [convertedAssets addObject:[[PhotoItem alloc] initFromALAsset:asset]];
     }
     return [convertedAssets copy];
@@ -92,15 +91,16 @@
 
 #pragma mark - DataManage Method
 
-- (void) loadGroupUsingCompletedBlock:(void (^)(void))complete andFailedBlock:(void (^)(NSError *))fail
+- (void) loadGroupUsingCallbackBlock:(void (^)(void))callback andFailedBlock:(void (^)(NSError *))fail
 {
     [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll
                                       usingBlock:^(ALAssetsGroup *group, BOOL *stop)
                                             {
                                                 if (group) {
                                                     [self.privateGroups addObject:group];
+                                                } else {
+                                                    callback();
                                                 }
-                                                complete();
                                             }
                                     failureBlock:^(NSError *error)
                                             {
@@ -108,14 +108,16 @@
                                             }];
 }
 
-- (void) loadAssetsFromGroup:(ALAssetsGroup *)group andCompleteBlock:(void (^)(void))complete
+- (void) loadAssetsFromGroup:(ALAssetsGroup *)group andCallbackBlock:(void (^)(void))callback
 {
-    [self.privateAssets removeAllObjects];
+    [self.privateSelectedAssets removeAllObjects];
     [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
         if (result) {
-            [self.privateAssets addObject:result];
-            complete();
+            [self.privateSelectedAssets addObject:result];
+        } else {
+            callback();
         }
+        
     }];
 }
 

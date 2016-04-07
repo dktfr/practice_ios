@@ -14,22 +14,36 @@
                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zmw-ia-APf">
+                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Fov-a4-TFo">
                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                    </imageView>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="251" verticalCompressionResistancePriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ccq-UO-uf4">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="ccq-UO-uf4" firstAttribute="leading" secondItem="Fov-a4-TFo" secondAttribute="leading" id="47V-m0-1mq"/>
+                            <constraint firstAttribute="bottom" secondItem="ccq-UO-uf4" secondAttribute="bottom" id="UE1-XE-ipB"/>
+                            <constraint firstItem="ccq-UO-uf4" firstAttribute="top" secondItem="Fov-a4-TFo" secondAttribute="top" id="cct-8G-ENZ"/>
+                            <constraint firstItem="ccq-UO-uf4" firstAttribute="centerY" secondItem="Fov-a4-TFo" secondAttribute="centerY" id="hMn-wE-fkO"/>
+                            <constraint firstAttribute="trailing" secondItem="ccq-UO-uf4" secondAttribute="trailing" id="zBh-ZS-XSo"/>
+                            <constraint firstItem="ccq-UO-uf4" firstAttribute="centerX" secondItem="Fov-a4-TFo" secondAttribute="centerX" id="zTQ-jd-4Bb"/>
+                        </constraints>
+                    </scrollView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="Zmw-ia-APf" secondAttribute="trailing" id="9aH-Pv-ua1"/>
-                <constraint firstItem="Zmw-ia-APf" firstAttribute="top" secondItem="b9l-wc-UXH" secondAttribute="top" id="Bdg-FH-wFW"/>
-                <constraint firstItem="Zmw-ia-APf" firstAttribute="leading" secondItem="b9l-wc-UXH" secondAttribute="leading" id="Ff6-kc-a5I"/>
-                <constraint firstAttribute="bottom" secondItem="Zmw-ia-APf" secondAttribute="bottom" id="cTi-Gf-hVW"/>
+                <constraint firstItem="Fov-a4-TFo" firstAttribute="top" secondItem="b9l-wc-UXH" secondAttribute="top" id="P3C-Sz-hQh"/>
+                <constraint firstAttribute="bottom" secondItem="Fov-a4-TFo" secondAttribute="bottom" id="Tma-3f-OE2"/>
+                <constraint firstAttribute="trailing" secondItem="Fov-a4-TFo" secondAttribute="trailing" id="l3A-7D-LLp"/>
+                <constraint firstItem="Fov-a4-TFo" firstAttribute="leading" secondItem="b9l-wc-UXH" secondAttribute="leading" id="rKS-1n-B4a"/>
             </constraints>
             <connections>
-                <outlet property="imageView" destination="Zmw-ia-APf" id="I9u-Kc-HNv"/>
+                <outlet property="imageView" destination="ccq-UO-uf4" id="XKe-wL-DXy"/>
+                <outlet property="scrollView" destination="Fov-a4-TFo" id="88P-GF-jpc"/>
             </connections>
-            <point key="canvasLocation" x="718" y="158"/>
+            <point key="canvasLocation" x="787" y="179"/>
         </collectionViewCell>
     </objects>
 </document>

@@ -37,7 +37,7 @@
 - (UIImage *) realImage
 {
     ALAssetRepresentation *representation = [(ALAsset *)self.originData defaultRepresentation];
-    return [[UIImage alloc] initWithCGImage:representation.fullScreenImage];
+    return [[UIImage alloc] initWithCGImage:representation.fullScreenImage scale:representation.scale orientation:UIImageOrientationUp];
 }
 
 @end

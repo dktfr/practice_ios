@@ -20,6 +20,17 @@
 
 static NSString * const reuseIdentifier = @"GroupItemCell";
 
+#pragma mark - LifeCycle
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -29,23 +40,31 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    NSNotificationCenter *notiCenter = [NSNotificationCenter defaultCenter];
-    [notiCenter addObserver:self
-                   selector:@selector(assetsLibraryDidChanged:)
-                       name:ALAssetsLibraryChangedNotification
-                     object:nil];
-    
     UINib *cellNib = [UINib nibWithNibName:@"GroupItemCell" bundle:nil];
     [self.tableView registerNib:cellNib forCellReuseIdentifier:reuseIdentifier];
     
     self.title = @"Album";
-    
+//    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                                           target:self
+                                                                                           action:@selector(popupCreateAlbumAlert)];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSLog(@"viewWillAppear");
     [self loadGroups];
+    [super viewWillAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
+    if ([self isViewLoaded] && ![[self view] window])
+    {
+        [self setView:nil];
+    }
 }
 
 #pragma mark - Table view data source
@@ -70,6 +89,7 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 //    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    [ImageManager sharedManager].shouldUpdateAssets = YES;
     PhotoGridController *photoGridController = [[PhotoGridController alloc] init];
     photoGridController.group = [[ImageManager sharedManager].groups objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:photoGridController animated:YES];
@@ -78,6 +98,7 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
 - (void) loadGroups
 {
     [[ImageManager sharedManager] loadGroupUsingCallbackBlock:^{
+        NSLog(@"GroupController_loadGroup - group count : %li",[[ImageManager sharedManager].groups count]);
         [self.tableView reloadData];
     } andFailedBlock:^(NSError *error){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR!"
@@ -89,9 +110,34 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
     }];
 }
 
-- (void) assetsLibraryDidChanged:(NSNotification *)changeNotification
+- (void)popupCreateAlbumAlert
 {
-    NSLog(@"Noti change");
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create Album"
+                                                    message:@"CreateAlbumMessage"
+                                                   delegate:self
+                                          cancelButtonTitle:@"cancel"
+                                          otherButtonTitles:@"ok", nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [ImageManager sharedManager].isMyAction = YES;
+        UITextField *albumTitleField = [alertView textFieldAtIndex:0];
+        NSString *albumTitle = albumTitleField.text;
+        [[ImageManager sharedManager] createGroupWithTitle:albumTitle usingCallbackBlock:^{
+            [ImageManager sharedManager].isMyAction = NO;
+            [self.tableView reloadData];
+        }];
+    }
+}
+
+- (void)invalidateView
+{
+    NSLog(@"Group List Invalidate View");
     [self loadGroups];
 }
 
@@ -103,7 +149,6 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
 }
 */
 
-/*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -113,7 +158,6 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
-*/
 
 /*
 // Override to support rearranging the table view.

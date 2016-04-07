@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIViewController (Invalidator)
+@protocol InvalidateDelegate
 
 - (void)invalidateView;
 

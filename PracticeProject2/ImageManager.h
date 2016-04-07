@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class UIImage;
+@class GroupItem;
 @class ALAssetsGroup;
 
 @interface ImageManager : NSObject
@@ -18,9 +20,16 @@
 @property (nonatomic, readonly) NSInteger numberOfAssets;
 @property (nonatomic, readonly) NSArray *selectedAssets;
 
+@property (nonatomic) BOOL shouldUpdateGroups;
+@property (nonatomic) BOOL shouldUpdateAssets;
+@property (nonatomic) BOOL isMyAction;
+
 + (instancetype) sharedManager;
 
-- (void) loadGroupUsingCallbackBlock:(void (^)(void))callback andFailedBlock:(void (^)(NSError *))fail;
-- (void) loadAssetsFromGroup:(ALAssetsGroup *)group andCallbackBlock:(void (^)(void))callback;
+- (void)loadGroupUsingCallbackBlock:(void (^)(void))callback andFailedBlock:(void (^)(NSError *))fail;
+- (void)loadAssetsFromGroup:(ALAssetsGroup *)group andCallbackBlock:(void (^)(void))callback;
+- (void)saveImage:(UIImage *)image toAlbum:(GroupItem *)group usingCallbackBlock:(void (^)(void))callback;
+- (void)createGroupWithTitle:(NSString *)groupTitle usingCallbackBlock:(void (^)(void))callback;
+- (void)deleteAssets:(NSArray *)indexes usingCallbackBlock:(void (^)(void))callback;
 
 @end

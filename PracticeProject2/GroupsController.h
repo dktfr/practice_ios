@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "InvalidateDelegate.h"
 
-@interface GroupsController : UITableViewController
+@interface GroupsController : UITableViewController <InvalidateDelegate, UIAlertViewDelegate>
 
 @end

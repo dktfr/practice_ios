@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "InvalidateDelegate.h"
 
 @class GroupItem;
 
-@interface PhotoGridController : UICollectionViewController
+@interface PhotoGridController : UICollectionViewController <UIAlertViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, InvalidateDelegate>
 
 @property (nonatomic) NSInteger columnCount;
 @property (nonatomic, strong) GroupItem *group;

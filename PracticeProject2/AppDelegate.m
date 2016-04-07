@@ -8,26 +8,38 @@
 
 #import "AppDelegate.h"
 #import "GroupsController.h"
+#import "ImageManager.h"
+#import "InvalidateDelegate.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface AppDelegate ()
+
+@property (nonatomic, strong) UINavigationController *navController;
 
 @end
 
 @implementation AppDelegate
-
+{
+    NSNotificationCenter *mNotiCenter;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    NSLog(@"??");
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor blueColor];
     
-    
     GroupsController *groupsController = [[GroupsController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:groupsController];
-    self.window.rootViewController = navController;
+    self.navController = [[UINavigationController alloc] initWithRootViewController:groupsController];
+    self.window.rootViewController = self.navController;
     
-    [self.window makeKeyWindow];
+    [self.window makeKeyAndVisible];
+    
+    mNotiCenter = [NSNotificationCenter defaultCenter];
+    [mNotiCenter addObserver:self
+                    selector:@selector(assetsLibraryDidChanged:)
+                        name:ALAssetsLibraryChangedNotification
+                      object:nil];
+    
     return YES;
 }
 
@@ -52,9 +64,30 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
-    
+    [mNotiCenter removeObserver:self];
 }
 
-
+- (void) assetsLibraryDidChanged:(NSNotification *)changeNotification
+{
+    NSDictionary *userInfo = changeNotification.userInfo;
+    
+    if ([userInfo count] > 0)
+    {
+        if ([userInfo objectForKey:ALAssetLibraryUpdatedAssetsKey])
+        {
+            [ImageManager sharedManager].shouldUpdateAssets = YES;
+        }
+        if ([userInfo objectForKey:ALAssetLibraryUpdatedAssetGroupsKey] || [userInfo objectForKey:ALAssetLibraryInsertedAssetGroupsKey] || [userInfo objectForKey:ALAssetLibraryDeletedAssetGroupsKey])
+        {
+            [ImageManager sharedManager].shouldUpdateGroups = YES;
+        }
+        
+        if(![ImageManager sharedManager].isMyAction)
+        {
+            id<InvalidateDelegate> visibleViewController = self.navController.topViewController;
+            [visibleViewController invalidateView];
+        }
+    }
+}
 
 @end

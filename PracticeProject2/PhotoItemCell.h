@@ -11,6 +11,6 @@
 @interface PhotoItemCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *thumbnail;
-@property (weak, nonatomic) IBOutlet UILabel *Test;
+@property (weak, nonatomic) IBOutlet UIImageView *selectedImageView;
 
 @end

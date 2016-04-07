@@ -16,6 +16,9 @@
 @end
 
 @implementation DetailController
+{
+    int mCurrentIndex;
+}
 
 static NSString * const reuseIdentifier = @"DetailImageCell";
 
@@ -27,16 +30,16 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
 - (instancetype) initWithCollectionViewLayout:(UICollectionViewLayout *)layout
 {
     if ([layout isKindOfClass:[UICollectionViewFlowLayout class]]) {
-        self.flowLayout = (UICollectionViewFlowLayout *)layout;
+        _flowLayout = (UICollectionViewFlowLayout *)layout;
     } else {
-        self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
+        _flowLayout = [[UICollectionViewFlowLayout alloc] init];
     }
     
-    self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    self.flowLayout.minimumLineSpacing = 0.0f;
-    self.flowLayout.minimumInteritemSpacing = 0.0f;
-    NSLog(@"initWIth");
-    return [super initWithCollectionViewLayout:self.flowLayout];
+    _flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    _flowLayout.minimumLineSpacing = 0.0f;
+    _flowLayout.minimumInteritemSpacing = 0.0f;
+    
+    return [super initWithCollectionViewLayout:_flowLayout];
 }
 
 - (void)viewDidLoad {
@@ -57,6 +60,7 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.assetIndex inSection:0];
     
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
@@ -66,6 +70,31 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    if ([self isViewLoaded] && ![[self view] window])
+    {
+        [self setView:nil];
+    }
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    CGPoint currentOffset = [self.collectionView contentOffset];
+    mCurrentIndex = currentOffset.x / self.collectionView.frame.size.width;
+    
+    [UIView animateWithDuration:0.1f animations:^{
+        [self.collectionView setAlpha:0.0f];
+    }];
+}
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    CGSize currentSize = self.collectionView.bounds.size;
+    float offset = mCurrentIndex * currentSize.width;
+    self.flowLayout.itemSize = currentSize;
+    [self.collectionView setContentOffset:CGPointMake(offset, 0)];
+    [UIView animateWithDuration:0.1f animations:^{
+        [self.collectionView setAlpha:1.0f];
+    }];
 }
 
 /*
@@ -85,12 +114,17 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     DetailImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
+    self.assetIndex = indexPath.row;
     // Configure the cell
     PhotoItem *item = [ImageManager sharedManager].selectedAssets[indexPath.row];
     UIImage *image = item.realImage;
     cell.imageView.image = image;
-    cell.scrollView.zoomScale = 1.0f;
     return cell;
+}
+
+- (void)invalidateView
+{
+    
 }
 
 #pragma mark <UICollectionViewDelegate>

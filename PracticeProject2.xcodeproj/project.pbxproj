@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D5B27421CB63CF400EB9780 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D5B27411CB63CF400EB9780 /* splash.png */; };
 		2D78657D1CB3B178003A7635 /* PhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D78657C1CB3B178003A7635 /* PhotoItem.m */; };
 		2D83F45E1CB262EE00291FEB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D83F45D1CB262EE00291FEB /* main.m */; };
 		2D83F4611CB262EE00291FEB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D83F4601CB262EE00291FEB /* AppDelegate.m */; };
 		2D83F4641CB262EE00291FEB /* PhotoGridController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D83F4631CB262EE00291FEB /* PhotoGridController.m */; };
-		2D83F46A1CB262EE00291FEB /* PracticeProject2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D83F4681CB262EE00291FEB /* PracticeProject2.xcdatamodeld */; };
 		2D83F46C1CB262EE00291FEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D83F46B1CB262EE00291FEB /* Assets.xcassets */; };
 		2D83F46F1CB262EE00291FEB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D83F46D1CB262EE00291FEB /* LaunchScreen.storyboard */; };
 		2D83F47D1CB2814100291FEB /* PhotoItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2D83F47C1CB2814100291FEB /* PhotoItemCell.xib */; };
@@ -27,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D5B27411CB63CF400EB9780 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
+		2D5EFF801CB65FA0005172AE /* InvalidateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvalidateDelegate.h; sourceTree = "<group>"; };
 		2D78657B1CB3B178003A7635 /* PhotoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoItem.h; sourceTree = "<group>"; };
 		2D78657C1CB3B178003A7635 /* PhotoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoItem.m; sourceTree = "<group>"; };
 		2D83F4591CB262EE00291FEB /* PracticeProject2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PracticeProject2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -35,7 +37,6 @@
 		2D83F4601CB262EE00291FEB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2D83F4621CB262EE00291FEB /* PhotoGridController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoGridController.h; sourceTree = "<group>"; };
 		2D83F4631CB262EE00291FEB /* PhotoGridController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoGridController.m; sourceTree = "<group>"; };
-		2D83F4691CB262EE00291FEB /* PracticeProject2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PracticeProject2.xcdatamodel; sourceTree = "<group>"; };
 		2D83F46B1CB262EE00291FEB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2D83F46E1CB262EE00291FEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D83F4701CB262EE00291FEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -69,6 +70,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D5B27401CB63CF400EB9780 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				2D5B27411CB63CF400EB9780 /* splash.png */,
+			);
+			name = Assets;
+			path = PracticeProject2/Assets;
+			sourceTree = "<group>";
+		};
 		2D78657E1CB3DC97003A7635 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +110,7 @@
 		2D83F4501CB262EE00291FEB = {
 			isa = PBXGroup;
 			children = (
+				2D5B27401CB63CF400EB9780 /* Assets */,
 				2D83F45B1CB262EE00291FEB /* PracticeProject2 */,
 				2D83F45A1CB262EE00291FEB /* Products */,
 			);
@@ -122,10 +133,10 @@
 				2D83F47B1CB2810300291FEB /* Models */,
 				2D83F45F1CB262EE00291FEB /* AppDelegate.h */,
 				2D83F4601CB262EE00291FEB /* AppDelegate.m */,
+				2D5EFF801CB65FA0005172AE /* InvalidateDelegate.h */,
 				2D83F46B1CB262EE00291FEB /* Assets.xcassets */,
 				2D83F46D1CB262EE00291FEB /* LaunchScreen.storyboard */,
 				2D83F4701CB262EE00291FEB /* Info.plist */,
-				2D83F4681CB262EE00291FEB /* PracticeProject2.xcdatamodeld */,
 				2D83F45C1CB262EE00291FEB /* Supporting Files */,
 			);
 			path = PracticeProject2;
@@ -155,6 +166,9 @@
 		2D83F47E1CB281A400291FEB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2D83F47C1CB2814100291FEB /* PhotoItemCell.xib */,
+				2D83F47F1CB281C000291FEB /* PhotoItemCell.h */,
+				2D83F4801CB281C000291FEB /* PhotoItemCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -162,6 +176,8 @@
 		2D83F4821CB2835B00291FEB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				2D83F4621CB262EE00291FEB /* PhotoGridController.h */,
+				2D83F4631CB262EE00291FEB /* PhotoGridController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -179,12 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				2D83F4821CB2835B00291FEB /* Controllers */,
-				2D83F4621CB262EE00291FEB /* PhotoGridController.h */,
-				2D83F4631CB262EE00291FEB /* PhotoGridController.m */,
 				2D83F47E1CB281A400291FEB /* Views */,
-				2D83F47C1CB2814100291FEB /* PhotoItemCell.xib */,
-				2D83F47F1CB281C000291FEB /* PhotoItemCell.h */,
-				2D83F4801CB281C000291FEB /* PhotoItemCell.m */,
 			);
 			name = PhotoGrid;
 			sourceTree = "<group>";
@@ -270,6 +281,7 @@
 				2DEAEB6F1CB393D600EB5717 /* GroupItemCell.xib in Resources */,
 				2D92E4641CB48D160080DEFA /* DetailImageCell.xib in Resources */,
 				2D83F46F1CB262EE00291FEB /* LaunchScreen.storyboard in Resources */,
+				2D5B27421CB63CF400EB9780 /* splash.png in Resources */,
 				2D83F46C1CB262EE00291FEB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,7 +299,6 @@
 				2D83F4641CB262EE00291FEB /* PhotoGridController.m in Sources */,
 				2DEAEB6A1CB393A400EB5717 /* GroupsController.m in Sources */,
 				2D92E45F1CB48B890080DEFA /* DetailController.m in Sources */,
-				2D83F46A1CB262EE00291FEB /* PracticeProject2.xcdatamodeld in Sources */,
 				2D83F4611CB262EE00291FEB /* AppDelegate.m in Sources */,
 				2DEAEB631CB383B900EB5717 /* ImageManager.m in Sources */,
 				2D83F4811CB281C000291FEB /* PhotoItemCell.m in Sources */,
@@ -402,6 +413,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nhnent.PracticeProject2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -413,6 +425,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nhnent.PracticeProject2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -438,19 +451,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		2D83F4681CB262EE00291FEB /* PracticeProject2.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				2D83F4691CB262EE00291FEB /* PracticeProject2.xcdatamodel */,
-			);
-			currentVersion = 2D83F4691CB262EE00291FEB /* PracticeProject2.xcdatamodel */;
-			path = PracticeProject2.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 2D83F4511CB262EE00291FEB /* Project object */;
 }

@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "InvalidateDelegate.h"
 
-@interface DetailController : UICollectionViewController
+@interface DetailController : UICollectionViewController <InvalidateDelegate>
 
 @property (nonatomic) NSInteger assetIndex;
 @property (nonatomic, strong) UICollectionViewFlowLayout *flowLayout;

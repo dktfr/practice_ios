@@ -17,19 +17,19 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KfL-cQ-sis">
-                        <rect key="frame" x="77" y="21" width="42" height="21"/>
+                        <rect key="frame" x="91.5" y="21" width="42" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G3D-k4-6zc">
-                        <rect key="frame" x="254" y="23" width="37.5" height="18"/>
+                        <rect key="frame" x="259.5" y="23" width="37.5" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.4273838141025641" green="0.4273838141025641" blue="0.4273838141025641" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="eLt-Ne-mAf">
-                        <rect key="frame" x="9" y="9" width="48.5" height="47.5"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eLt-Ne-mAf">
+                        <rect key="frame" x="13" y="3" width="58.5" height="57.5"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="eLt-Ne-mAf" secondAttribute="height" multiplier="1:1" constant="1" id="Wrk-31-SVm"/>
                         </constraints>
@@ -38,10 +38,10 @@
                 <constraints>
                     <constraint firstItem="G3D-k4-6zc" firstAttribute="centerY" secondItem="KtD-Y9-TnD" secondAttribute="centerY" id="7sZ-b1-pmU"/>
                     <constraint firstItem="KfL-cQ-sis" firstAttribute="centerY" secondItem="KtD-Y9-TnD" secondAttribute="centerY" id="BUZ-iI-BT4"/>
-                    <constraint firstItem="eLt-Ne-mAf" firstAttribute="bottom" secondItem="KtD-Y9-TnD" secondAttribute="bottomMargin" constant="1" id="Cia-oE-5oR"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="G3D-k4-6zc" secondAttribute="trailing" constant="20" id="HWI-Rz-cp9"/>
-                    <constraint firstItem="eLt-Ne-mAf" firstAttribute="leading" secondItem="KtD-Y9-TnD" secondAttribute="leadingMargin" constant="1" id="i74-HX-N5q"/>
-                    <constraint firstItem="eLt-Ne-mAf" firstAttribute="top" secondItem="KtD-Y9-TnD" secondAttribute="topMargin" constant="1" id="rP0-H5-j8D"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="G3D-k4-6zc" secondAttribute="trailing" constant="15" id="HWI-Rz-cp9"/>
+                    <constraint firstItem="eLt-Ne-mAf" firstAttribute="top" secondItem="KtD-Y9-TnD" secondAttribute="topMargin" constant="-5" id="L12-1F-2aw"/>
+                    <constraint firstItem="eLt-Ne-mAf" firstAttribute="leading" secondItem="KtD-Y9-TnD" secondAttribute="leadingMargin" constant="5" id="SDH-xY-pDq"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="eLt-Ne-mAf" secondAttribute="bottom" constant="-5" id="SiS-AJ-Zqr"/>
                     <constraint firstItem="KfL-cQ-sis" firstAttribute="leading" secondItem="eLt-Ne-mAf" secondAttribute="trailing" constant="20" id="zga-Iq-2Wv"/>
                 </constraints>
             </tableViewCellContentView>

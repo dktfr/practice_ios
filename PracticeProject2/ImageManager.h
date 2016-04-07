@@ -7,14 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 
 @class UIImage;
 @class GroupItem;
-@class ALAssetsGroup;
 
 @interface ImageManager : NSObject
 
 @property (nonatomic, readonly) BOOL shouldUseNewLib;
+
+@property (nonatomic, readonly) NSArray *sectionOfAlbum;
 @property (nonatomic, readonly) NSInteger numberOfGroups;
 @property (nonatomic, readonly) NSArray *groups;
 @property (nonatomic, readonly) NSInteger numberOfAssets;

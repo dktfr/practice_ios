@@ -8,7 +8,6 @@
 
 #import "ImageManager.h"
 #import <UIKit/UIKit.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "GroupItem.h"
 #import "PhotoItem.h"
 
@@ -49,16 +48,24 @@
     self = [super init];
     _privateGroups = [[NSMutableArray alloc] init];
     _privateSelectedAssets = [[NSMutableArray alloc] init];
-//    if (NSClassFromString(@"PHAssetCollection")) {
-//        _shouldUseNewLib = YES;
-//    } else {
-        _shouldUseNewLib = NO;
     self.shouldUpdateGroups = YES;
     self.shouldUpdateAssets = YES;
     self.isMyAction = NO;
+    
+    
+    if (NSClassFromString(@"PHAssetCollection")) {
+        _shouldUseNewLib = YES;
+        
+        PHFetchOptions *allPhotosOptions = [[PHFetchOptions alloc] init];
+        allPhotosOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
+        
+        PHFetchResult *allPhotos = [PHAsset fetchAssetsWithOptions:allPhotosOptions];
+        
+    } else {
+        _shouldUseNewLib = NO;
         self.assetsLibrary = [[ALAssetsLibrary alloc] init];
     
-//    }
+    }
     return self;
 }
 

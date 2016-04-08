@@ -52,8 +52,12 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
     UINib *cellNib = [UINib nibWithNibName:@"DetailImageCell" bundle:nil];
     [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:reuseIdentifier];
     self.collectionView.pagingEnabled = YES;
-    self.flowLayout.itemSize = self.collectionView.bounds.size;
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+                                                                                           target:self
+                                                                                           action:@selector(shareImage)];
+    
+    self.flowLayout.itemSize = self.collectionView.bounds.size;
     [self.flowLayout invalidateLayout];
     // Do any additional setup after loading the view.
 }
@@ -97,16 +101,6 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
     }];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return [[ImageManager sharedManager].selectedAssets count];
 }
@@ -125,6 +119,17 @@ static NSString * const reuseIdentifier = @"DetailImageCell";
 - (void)invalidateView
 {
     
+}
+
+- (void)shareImage
+{
+    CGPoint currentOffset = [self.collectionView contentOffset];
+    mCurrentIndex = currentOffset.x / self.collectionView.frame.size.width;
+    
+    PhotoItem *item = [ImageManager sharedManager].selectedAssets[mCurrentIndex];
+    
+    UIActivityViewController *shareContorller = [[UIActivityViewController alloc] initWithActivityItems:@[item.realImage] applicationActivities:nil];
+    [self presentViewController:shareContorller animated:YES completion:nil];
 }
 
 #pragma mark <UICollectionViewDelegate>

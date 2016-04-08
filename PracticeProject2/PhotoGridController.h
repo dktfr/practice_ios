@@ -11,7 +11,7 @@
 
 @class GroupItem;
 
-@interface PhotoGridController : UICollectionViewController <UIAlertViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, InvalidateDelegate>
+@interface PhotoGridController : UICollectionViewController <UIAlertViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, InvalidateDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic) NSInteger columnCount;
 @property (nonatomic, strong) GroupItem *group;

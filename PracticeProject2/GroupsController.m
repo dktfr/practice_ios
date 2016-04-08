@@ -44,7 +44,6 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
     [self.tableView registerNib:cellNib forCellReuseIdentifier:reuseIdentifier];
     
     self.title = @"Album";
-//    self.navigationItem.leftBarButtonItem = self.editButtonItem;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                                            target:self
                                                                                            action:@selector(popupCreateAlbumAlert)];
@@ -88,7 +87,6 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     [ImageManager sharedManager].shouldUpdateAssets = YES;
     PhotoGridController *photoGridController = [[PhotoGridController alloc] init];
     photoGridController.group = [[ImageManager sharedManager].groups objectAtIndex:indexPath.row];
@@ -150,14 +148,14 @@ static NSString * const reuseIdentifier = @"GroupItemCell";
 */
 
 // Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        // Delete the row from the data source
+//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+//        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+//    }   
+//}
 
 /*
 // Override to support rearranging the table view.

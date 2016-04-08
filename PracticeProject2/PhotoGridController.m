@@ -13,16 +13,25 @@
 #import "GroupItem.h"
 #import "DetailController.h"
 
+#define TOUCH_DIRECTION_HORIZONRAL 0
+#define TOUCH_DIRECTION_VERTICAL 1
+#define TOUCH_SLOP 10
+
 @interface PhotoGridController ()
 
 @property (nonatomic, strong) UICollectionViewFlowLayout *flowLayout;
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeGesture;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) NSMutableArray *selectedIndex;
 
 @end
 
 @implementation PhotoGridController
 {
+    int mIsOrientation;
+    BOOL mIsGestureAllowed;
+    int mTouchState;
+    CGPoint mStartPoint;
+    
     UIBarButtonItem *mEditBtn;
     UIBarButtonItem *mDoneBtn;
     UIBarButtonItem *mFlexibleBtn;
@@ -31,6 +40,8 @@
 }
 
 static NSString * const reuseIdentifier = @"PhotoItemCell";
+
+#pragma mark - initailize & lifecycle
 
 - (instancetype) init
 {
@@ -48,8 +59,8 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
     _flowLayout.minimumLineSpacing = 3.0f;
     _flowLayout.minimumInteritemSpacing = 3.0f;
     
-    _swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipe)];
-    _swipeGesture.direction = UISwipeGestureRecognizerDirectionLeft | UISwipeGestureRecognizerDirectionRight;
+    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipe:)];
+    _panGesture.cancelsTouchesInView = YES;
     
     _selectedIndex = [[NSMutableArray alloc] init];
     
@@ -86,7 +97,8 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
     
     self.flowLayout.itemSize = [self computeSizeForColumnWithContainerSize:self.collectionView.bounds.size];
     
-    [self.collectionView addGestureRecognizer:self.swipeGesture];
+    self.panGesture.delegate = self;
+    [self.collectionView addGestureRecognizer:self.panGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -102,13 +114,6 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
     {
         [self setView:nil];
     }
-}
-
-- (CGSize)computeSizeForColumnWithContainerSize:(CGSize)size
-{
-    CGFloat collectionViewWidth = size.width;
-    CGFloat edgeLenght = (collectionViewWidth - (self.columnCount - 1) * self.flowLayout.minimumInteritemSpacing) / self.columnCount;
-    return CGSizeMake(edgeLenght, edgeLenght);
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -139,19 +144,13 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
     PhotoItem *item = [[ImageManager sharedManager].selectedAssets objectAtIndex:indexPath.row];
     
     cell.thumbnail.image = item.thumbnail;
-    if ([self isEditing])
-    {
-        if ([self.selectedIndex indexOfObject:indexPath] != NSNotFound)
-        {
+    if ([self isEditing]) {
+        if ([self.selectedIndex indexOfObject:indexPath] != NSNotFound) {
             cell.selected = YES;
-        }
-        else
-        {
+        } else {
             cell.selected = NO;
         }
-    }
-    else
-    {
+    } else {
         cell.selected = NO;
     }
     
@@ -160,24 +159,27 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self isEditing])
-    {
-        if ([self.selectedIndex indexOfObject:indexPath] != NSNotFound)
-        {
+    if ([self isEditing]) {
+        if ([self.selectedIndex indexOfObject:indexPath] != NSNotFound) {
             [self.selectedIndex removeObject:indexPath];
-        }
-        else
-        {
+        } else {
             [self.selectedIndex addObject:indexPath];
         }
         [self.collectionView reloadData];
-    }
-    else
-    {
+    } else {
         DetailController *detailController = [[DetailController alloc] init];
         detailController.assetIndex = indexPath.row;
         [self.navigationController pushViewController:detailController animated:YES];
     }
+}
+
+#pragma mark - 
+
+- (CGSize)computeSizeForColumnWithContainerSize:(CGSize)size
+{
+    CGFloat collectionViewWidth = size.width;
+    CGFloat edgeLenght = (collectionViewWidth - (self.columnCount - 1) * self.flowLayout.minimumInteritemSpacing) / self.columnCount;
+    return CGSizeMake(edgeLenght, edgeLenght);
 }
 
 - (void)loadAssets
@@ -187,10 +189,95 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
     }];
 }
 
+#pragma mark - Delegate
+
 - (void)invalidateView
 {
     [self loadAssets];
 }
+
+- (void)didSwipe:(UIPanGestureRecognizer *)gesture
+{
+    if (![self isEditing])
+    {
+        [self setEditing:YES];
+    }
+    
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        mStartPoint = [gesture locationInView:self.collectionView];
+    }
+    else if (gesture.state == UIGestureRecognizerStateChanged)
+    {
+        CGPoint location = [gesture locationInView:self.collectionView];
+        if (hypot(mStartPoint.x - location.x, mStartPoint.y - location.y) < TOUCH_SLOP)
+        {
+            NSLog(@"less than touch slop");
+            mIsGestureAllowed = NO;
+            float deltaX = fabs(mStartPoint.x - location.x);
+            float deltaY = fabs(mStartPoint.y - location.y);
+            if (deltaX > deltaY)
+            {
+                mIsOrientation = TOUCH_DIRECTION_HORIZONRAL;
+                NSLog(@"touch horizontal");
+            }
+            else
+            {
+                mIsOrientation = TOUCH_DIRECTION_VERTICAL;
+                NSLog(@"touch vertical");
+            }
+        }
+        else
+        {
+            NSLog(@"more than touch slop");
+            if (!mIsGestureAllowed)
+            {
+                if (mIsOrientation == TOUCH_DIRECTION_VERTICAL)
+                {
+                    gesture.cancelsTouchesInView = NO;
+                    gesture.delaysTouchesBegan = YES;
+                    return;
+                }
+                else
+                    mIsGestureAllowed = YES;
+            }
+            else
+            {
+                NSLog(@"Gesture allow : %f, %f",location.x, location.y);
+            }
+        }
+    }
+    else if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled)
+    {
+        mIsGestureAllowed = NO;
+        NSLog(@"mIsGestureAllowed : %i",mIsGestureAllowed);
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [self deleteItems];
+    }
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [[ImageManager sharedManager] saveImage:info[UIImagePickerControllerOriginalImage]
+                                    toAlbum:self.group
+                         usingCallbackBlock:^{
+                             [ImageManager sharedManager].isMyAction = NO;
+                         }];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+#pragma mark - target-action method
 
 - (void)toggleEdteMode
 {
@@ -210,13 +297,6 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
         self.navigationItem.rightBarButtonItem = mDoneBtn;
     }
     [self.collectionView reloadData];
-}
-
-- (void)didSwipe
-{
-    NSLog(@"swipe");
-    [self setEditing:YES animated:YES];
-    self.collectionView.allowsMultipleSelection = YES;
 }
 
 - (void)deleteItems
@@ -244,14 +324,6 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1)
-    {
-        [self deleteItems];
-    }
-}
-
 - (void)takePhoto
 {
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
@@ -271,16 +343,6 @@ static NSString * const reuseIdentifier = @"PhotoItemCell";
                                               otherButtonTitles:nil];
         [alert show];
     }
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [[ImageManager sharedManager] saveImage:info[UIImagePickerControllerOriginalImage]
-                                    toAlbum:self.group
-                         usingCallbackBlock:^{
-                             [ImageManager sharedManager].isMyAction = NO;
-                         }];
 }
 
 @end

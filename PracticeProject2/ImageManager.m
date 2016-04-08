@@ -102,15 +102,12 @@
         [self.privateGroups removeAllObjects];
         [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll
                                           usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                                                    if (group)
-                                                    {
+                                                    if (group) {
                                                         [self.privateGroups addObject:group];
                                                     }
-                                                    else
-                                                    {
+                                                    else {
                                                         self.shouldUpdateGroups = NO;
-                                                        if (callback)
-                                                        {
+                                                        if (callback) {
                                                             dispatch_async(dispatch_get_main_queue(), ^{
                                                                 callback();
                                                             });
@@ -118,8 +115,7 @@
                                                     }
                                                 }
                                         failureBlock:^(NSError *error) {
-                                                    if (fail)
-                                                    {
+                                                    if (fail) {
                                                         dispatch_async(dispatch_get_main_queue(), ^{
                                                             fail(error);
                                                         });
@@ -138,8 +134,7 @@
                 [self.privateSelectedAssets addObject:result];
             } else {
                 self.shouldUpdateAssets = NO;
-                if (callback)
-                {
+                if (callback) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         callback();
                     });
@@ -158,8 +153,7 @@
                                              ALAssetsGroup *assetGroup = (ALAssetsGroup *)group.originalData;
                                              [assetGroup addAsset:asset];
                                              [self.privateSelectedAssets addObject:asset];
-                                             if (callback)
-                                             {
+                                             if (callback) {
                                                  dispatch_async(dispatch_get_main_queue(), ^{
                                                      callback();
                                                  });
@@ -176,8 +170,7 @@
     [self.assetsLibrary addAssetsGroupAlbumWithName:groupTitle
                                         resultBlock:^(ALAssetsGroup *group) {
                                             [weakManager.privateGroups addObject:group];
-                                            if (callback)
-                                            {
+                                            if (callback) {
                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                     callback();
                                                 });
@@ -190,16 +183,13 @@
 
 - (void)deleteAssets:(NSArray *)indexes usingCallbackBlock:(void (^)(void))callback
 {
-    for (NSIndexPath *indexPath in indexes)
-    {
+    for (NSIndexPath *indexPath in indexes) {
         __weak ALAsset *asset = self.privateSelectedAssets[indexPath.row];
-        if ([asset isEditable])
-        {
+        if ([asset isEditable]) {
             [asset setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
                 NSLog(@"????S");
                 [self.privateSelectedAssets removeObject:asset];
-                if (callback)
-                {
+                if (callback) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         callback();
                     });
